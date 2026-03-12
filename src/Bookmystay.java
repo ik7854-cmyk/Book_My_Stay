@@ -1,4 +1,6 @@
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 
 abstract class Room {
     String type;
@@ -87,14 +89,48 @@ class SearchService {
     }
 }
 
+class Reservation {
+    String guestName;
+    String roomType;
+
+    Reservation(String guestName, String roomType) {
+        this.guestName = guestName;
+        this.roomType = roomType;
+    }
+
+    void displayReservation() {
+        System.out.println("Guest: " + guestName + " requested " + roomType);
+    }
+}
+
+class BookingRequestQueue {
+
+    private Queue<Reservation> queue;
+
+    BookingRequestQueue() {
+        queue = new LinkedList<>();
+    }
+
+    void addRequest(Reservation reservation) {
+        queue.add(reservation);
+        System.out.println("Request added to queue for " + reservation.guestName);
+    }
+
+    void displayQueue() {
+        System.out.println("\nCurrent Booking Request Queue:");
+        for (Reservation r : queue) {
+            r.displayReservation();
+        }
+    }
+}
+
 public class Bookmystay {
 
     public static void main(String[] args) {
 
         System.out.println("Welcome to the Hotel Booking System");
         System.out.println("Application: BookMyStay");
-        System.out.println("Version: v1.0");
-        System.out.println();
+        System.out.println("Version: v1.0\n");
 
         Room single = new SingleRoom();
         Room doubleRoom = new DoubleRoom();
@@ -103,9 +139,20 @@ public class Bookmystay {
         Room[] rooms = {single, doubleRoom, suite};
 
         RoomInventory inventory = new RoomInventory();
-
         SearchService searchService = new SearchService(inventory);
 
         searchService.searchRooms(rooms);
+
+        BookingRequestQueue requestQueue = new BookingRequestQueue();
+
+        Reservation r1 = new Reservation("Alice", "Single Room");
+        Reservation r2 = new Reservation("Bob", "Double Room");
+        Reservation r3 = new Reservation("Charlie", "Suite Room");
+
+        requestQueue.addRequest(r1);
+        requestQueue.addRequest(r2);
+        requestQueue.addRequest(r3);
+
+        requestQueue.displayQueue();
     }
 }
